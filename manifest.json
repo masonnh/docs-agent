@@ -4,7 +4,11 @@
   "version": "0.1.0",
   "description": "Analyze PR changes and recommend Google Docs updates.",
   "permissions": ["storage"],
-  "host_permissions": ["https://api.github.com/*", "https://docs.googleapis.com/*"],
+  "host_permissions": [
+    "https://api.github.com/*",
+    "https://docs.googleapis.com/*",
+    "https://api.openai.com/*"
+  ],
   "action": {
     "default_title": "Docs Agent",
     "default_popup": "popup.html"

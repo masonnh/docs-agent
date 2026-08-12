@@ -2,8 +2,13 @@ function send(message) {
   return chrome.runtime.sendMessage(message);
 }
 
-function setConnectionStatus(id, connected) {
-  document.getElementById(id).textContent = connected ? "Connected" : "Disconnected";
+function setStatus(id, text) {
+  document.getElementById(id).textContent = text;
+}
+
+function setConnectionStatus(id, connected, details = "") {
+  const status = connected ? "Connected" : "Disconnected";
+  setStatus(id, connected && details ? `${status}: ${details}` : status);
 }
 
 function showResult(result) {
@@ -29,28 +34,54 @@ function showResult(result) {
 
 async function refresh() {
   const state = await send({ type: "get_state" });
-  setConnectionStatus("github-status", state.githubConnected);
-  setConnectionStatus("docs-status", state.googleDocsConnected);
+  setConnectionStatus("github-status", state.githubConnected, state.githubUser);
+  setConnectionStatus("docs-status", state.googleDocsConnected, state.googleDocTitle);
+  setConnectionStatus("chatgpt-status", state.chatgptConnected, state.chatgptModel);
+  if (!document.getElementById("google-doc-id").value && state.targetGoogleDocId) {
+    document.getElementById("google-doc-id").value = state.targetGoogleDocId;
+  }
   if (state.lastSuggestion) {
     showResult(state.lastSuggestion);
   }
 }
 
 document.getElementById("connect-github").addEventListener("click", async () => {
-  await send({ type: "connect_github" });
+  const response = await send({ type: "connect_github" });
+  if (!response.ok) {
+    showResult({ status: "error", message: response.error });
+    return;
+  }
   await refresh();
 });
 
 document.getElementById("connect-docs").addEventListener("click", async () => {
-  await send({ type: "connect_google_docs" });
+  const docId = document.getElementById("google-doc-id").value.trim();
+  const response = await send({ type: "connect_google_docs", docId });
+  if (!response.ok) {
+    showResult({ status: "error", message: response.error });
+    return;
+  }
+  await refresh();
+});
+
+document.getElementById("connect-chatgpt").addEventListener("click", async () => {
+  const response = await send({ type: "connect_chatgpt" });
+  if (!response.ok) {
+    showResult({ status: "error", message: response.error });
+    return;
+  }
   await refresh();
 });
 
 document.getElementById("enable-repo").addEventListener("click", async () => {
   const repo = document.getElementById("repo-input").value.trim();
   if (!repo) return;
-  await send({ type: "toggle_repo", repo, enabled: true });
-  document.getElementById("repo-status").textContent = `Monitoring enabled for ${repo}`;
+  const response = await send({ type: "toggle_repo", repo, enabled: true });
+  if (!response.ok) {
+    showResult({ status: "error", message: response.error });
+    return;
+  }
+  document.getElementById("repo-status").textContent = `Monitoring enabled for ${repo.trim()}`;
 });
 
 document.getElementById("analyze").addEventListener("click", async () => {
