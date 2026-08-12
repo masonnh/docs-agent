@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Docs Agent</title>
+    <link rel="stylesheet" href="popup.css" />
+  </head>
+  <body>
+    <main>
+      <h1>Docs Agent</h1>
+
+      <section>
+        <h2>Connections</h2>
+        <div class="row">
+          <button id="connect-github">Connect GitHub</button>
+          <span id="github-status">Disconnected</span>
+        </div>
+        <div class="row">
+          <button id="connect-docs">Connect Google Docs</button>
+          <span id="docs-status">Disconnected</span>
+        </div>
+      </section>
+
+      <section>
+        <h2>Repository Monitoring</h2>
+        <input id="repo-input" placeholder="owner/repo" />
+        <button id="enable-repo">Enable Repository</button>
+        <p id="repo-status"></p>
+      </section>
+
+      <section>
+        <h2>PR Analysis</h2>
+        <input id="pr-repo" placeholder="owner/repo" />
+        <input id="pr-title" placeholder="PR title" />
+        <textarea id="changed-files" placeholder="Changed files (one per line)"></textarea>
+        <button id="analyze">Analyze PR</button>
+      </section>
+
+      <section id="result-panel" class="hidden">
+        <h2 id="result-title"></h2>
+        <p id="result-message"></p>
+        <div class="row">
+          <button id="accept" class="hidden">Accept</button>
+          <button id="reject" class="hidden">Reject</button>
+        </div>
+      </section>
+    </main>
+    <script src="popup.js"></script>
+  </body>
+</html>
