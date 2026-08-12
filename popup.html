@@ -1,54 +1,41 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
     <title>Docs Agent</title>
     <link rel="stylesheet" href="popup.css" />
   </head>
   <body>
     <main>
       <h1>Docs Agent</h1>
-
       <section>
-        <h2>Connections</h2>
-        <div class="row">
-          <button id="connect-github">Connect GitHub</button>
-          <span id="github-status">Disconnected</span>
-        </div>
-        <div class="row">
-          <button id="connect-docs">Connect Google Docs</button>
-          <span id="docs-status">Disconnected</span>
-        </div>
-        <input id="google-doc-id" placeholder="Google Doc ID (or set GOOGLE_DOC_ID in .env)" />
-        <div class="row">
-          <button id="connect-chatgpt">Connect ChatGPT</button>
-          <span id="chatgpt-status">Disconnected</span>
-        </div>
+        <h2>Documentation</h2>
+        <input
+          id="google-doc-url"
+          type="url"
+          placeholder="Public Google Docs link"
+        /><button id="save-docs-btn">Save Docs Link</button>
+        <p id="docs-status">Not saved</p>
       </section>
-
       <section>
-        <h2>Repository Monitoring</h2>
-        <input id="repo-input" placeholder="owner/repo" />
-        <button id="enable-repo">Enable Repository</button>
-        <p id="repo-status"></p>
+        <h2>Analyze a Pull Request</h2>
+        <input
+          id="pr-url"
+          type="url"
+          placeholder="https://github.com/owner/repo/pull/123"
+        /><button id="save-pr-btn">Save PR</button>
+        <p id="pr-status">Not saved</p>
       </section>
-
-      <section>
-        <h2>PR Analysis</h2>
-        <input id="pr-repo" placeholder="owner/repo" />
-        <input id="pr-title" placeholder="PR title" />
-        <textarea id="changed-files" placeholder="Changed files (one per line)"></textarea>
-        <button id="analyze">Analyze PR</button>
+      <section id="suggestions-panel" class="hidden">
+        <h2>Get Suggestions</h2>
+        <button id="get-suggestions-btn">Get Suggestions</button>
+        <p id="suggestions-status">No suggestions yet</p>
       </section>
-
       <section id="result-panel" class="hidden">
         <h2 id="result-title"></h2>
         <p id="result-message"></p>
-        <div class="row">
-          <button id="accept" class="hidden">Accept</button>
-          <button id="reject" class="hidden">Reject</button>
-        </div>
+        <button id="copy-suggestion" class="hidden">Copy suggestion</button>
       </section>
     </main>
     <script src="popup.js"></script>

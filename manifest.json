@@ -1,4 +1,4 @@
-{
+﻿{
   "manifest_version": 3,
   "name": "Docs Agent",
   "version": "0.1.0",
@@ -6,14 +6,10 @@
   "permissions": ["storage"],
   "host_permissions": [
     "https://api.github.com/*",
-    "https://docs.googleapis.com/*",
+    "https://docs.google.com/*",
+    "https://*.googleusercontent.com/*",
     "https://api.openai.com/*"
   ],
-  "action": {
-    "default_title": "Docs Agent",
-    "default_popup": "popup.html"
-  },
-  "background": {
-    "service_worker": "background.js"
-  }
+  "action": { "default_title": "Docs Agent", "default_popup": "popup.html" },
+  "background": { "service_worker": "background.js" }
 }
