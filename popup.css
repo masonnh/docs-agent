@@ -1,31 +1,259 @@
-body {
-  font-family: Arial, sans-serif;
-  margin: 0;
-  padding: 12px;
-  min-width: 320px;
+:root {
+  --bg: #0b0f14;
+  --surface: #111720;
+  --surface-hover: #171e29;
+  --border: #26303d;
+  --text: #f1f5f9;
+  --text-muted: #8b98a8;
+  --accent: #6366f1;
+  --accent-hover: #7c7ff7;
+  --success: #34d399;
+  --input-bg: #0d131b;
 }
 
+* {
+  box-sizing: border-box;
+}
+
+body {
+  width: 380px;
+  min-height: 400px;
+  margin: 0;
+  padding: 20px;
+
+  font-family:
+    Inter,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif;
+
+  color: var(--text);
+  background: var(--bg);
+  font-size: 13px;
+}
+
+main {
+  width: 100%;
+}
+
+/* Header */
+
 h1 {
-  font-size: 18px;
-  margin: 0 0 10px;
+  margin: 0 0 4px;
+
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: -0.4px;
+}
+
+h1::after {
+  content: "";
+  display: inline-block;
+
+  width: 7px;
+  height: 7px;
+  margin-left: 6px;
+
+  border-radius: 50%;
+  background: var(--accent);
+
+  box-shadow: 0 0 10px rgba(99, 102, 241, 0.7);
 }
 
 h2 {
-  font-size: 14px;
-  margin: 0 0 8px;
+  margin: 0 0 10px;
+
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+
+  color: var(--text-muted);
 }
+
+/* Sections */
 
 section {
   margin-bottom: 14px;
+  padding: 14px;
+
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
 }
 
+section:first-child {
+  margin-top: 16px;
+}
+
+/* Inputs */
+
 input,
-textarea,
+textarea {
+  width: 100%;
+  margin-bottom: 8px;
+  padding: 10px 11px;
+
+  color: var(--text);
+  background: var(--input-bg);
+
+  border: 1px solid var(--border);
+  border-radius: 7px;
+
+  outline: none;
+
+  font-family: inherit;
+  font-size: 12px;
+
+  transition:
+    border-color 0.15s ease,
+    box-shadow 0.15s ease,
+    background 0.15s ease;
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: #596575;
+}
+
+input:hover,
+textarea:hover {
+  border-color: #344052;
+}
+
+input:focus,
+textarea:focus {
+  border-color: var(--accent);
+
+  box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.15);
+
+  background: #0f151e;
+}
+
+/* Buttons */
+
 button {
   width: 100%;
-  box-sizing: border-box;
   margin-bottom: 8px;
+  padding: 10px 12px;
+
+  color: white;
+  background: var(--accent);
+
+  border: 0;
+  border-radius: 7px;
+
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition:
+    background 0.15s ease,
+    transform 0.1s ease,
+    box-shadow 0.15s ease;
 }
+
+button:hover {
+  background: var(--accent-hover);
+
+  box-shadow: 0 4px 14px rgba(99, 102, 241, 0.2);
+}
+
+button:active {
+  transform: translateY(1px);
+  box-shadow: none;
+}
+
+/* Status text */
+
+p {
+  margin: 5px 0 0;
+
+  color: var(--text-muted);
+  font-size: 11px;
+  line-height: 1.5;
+}
+
+/* Saved status */
+
+#docs-status,
+#pr-status {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+#docs-status:not(:empty)::before,
+#pr-status:not(:empty)::before {
+  content: "●";
+
+  color: var(--success);
+  font-size: 7px;
+}
+
+/* Suggestions */
+
+#suggestions-panel {
+  border-color: rgba(99, 102, 241, 0.35);
+
+  background:
+    linear-gradient(135deg, rgba(99, 102, 241, 0.08), transparent 55%),
+    var(--surface);
+}
+
+#suggestions-status {
+  margin-top: 10px;
+  padding: 10px;
+
+  color: var(--text-muted);
+  background: var(--input-bg);
+
+  border: 1px solid var(--border);
+  border-radius: 7px;
+
+  white-space: pre-wrap;
+}
+
+/* Results */
+
+#result-panel {
+  border-color: rgba(52, 211, 153, 0.25);
+
+  background:
+    linear-gradient(135deg, rgba(52, 211, 153, 0.05), transparent 60%),
+    var(--surface);
+}
+
+#result-panel h2 {
+  color: var(--success);
+}
+
+#result-message {
+  line-height: 1.6;
+}
+
+/* Copy button */
+
+#copy-suggestion {
+  margin-top: 10px;
+
+  background: transparent;
+  border: 1px solid var(--border);
+
+  color: var(--text-muted);
+}
+
+#copy-suggestion:hover {
+  color: var(--text);
+  background: var(--surface-hover);
+  border-color: #3a4656;
+  box-shadow: none;
+}
+
+/* Utility */
 
 .row {
   display: flex;
@@ -39,4 +267,23 @@ button {
 
 .hidden {
   display: none;
+}
+
+/* Scrollbar */
+
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #293342;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #3a4656;
 }

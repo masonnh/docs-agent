@@ -70,17 +70,85 @@ document.getElementById("get-suggestions-btn").addEventListener("click", () => {
   });
 });
 
-// listen for suggestions from the background script and display them
+function markdownToHtml(markdown) {
+  let html = markdown;
+
+  // Escape HTML first
+  html = html
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;");
+
+  // Code blocks
+  html = html.replace(
+    /```(?:\w+)?\n([\s\S]*?)```/g,
+    "<pre><code>$1</code></pre>",
+  );
+
+  // Inline code
+  html = html.replace(/`([^`]+)`/g, "<code>$1</code>");
+
+  // Headings
+  html = html.replace(/^### (.*)$/gm, "<h3>$1</h3>");
+
+  html = html.replace(/^## (.*)$/gm, "<h2>$1</h2>");
+
+  html = html.replace(/^# (.*)$/gm, "<h1>$1</h1>");
+
+  // Bold
+  html = html.replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>");
+
+  // Italic
+  html = html.replace(/\*(.*?)\*/g, "<em>$1</em>");
+
+  // Unordered lists
+  html = html.replace(/^[-*] (.*)$/gm, "<li>$1</li>");
+
+  html = html.replace(/(<li>.*<\/li>\n?)+/g, "<ul>$&</ul>");
+
+  // Numbered lists
+  html = html.replace(/^\d+\. (.*)$/gm, "<li>$1</li>");
+
+  // Paragraphs / line breaks
+  html = html.replace(/\n\n/g, "</p><p>");
+  html = html.replace(/\n/g, "<br>");
+
+  return `<p>${html}</p>`;
+}
+
+// Load previously saved suggestions when the popup opens
+document.addEventListener("DOMContentLoaded", () => {
+  chrome.storage.local.get("savedSuggestions", (data) => {
+    if (data.savedSuggestions) {
+      const suggestionsStatus = document.getElementById("suggestions-status");
+      const copySuggestion = document.getElementById("copy-suggestion");
+
+      suggestionsStatus.innerHTML = markdownToHtml(data.savedSuggestions);
+
+      copySuggestion.classList.remove("hidden");
+    }
+  });
+});
+
+// Listen for new suggestions from the background script
 chrome.runtime.onMessage.addListener((message) => {
+  console.log("Received message in popup.js:", message);
+
   if (message.action === "displaySuggestions") {
     const suggestions = message.suggestions;
-    const resultPanel = document.getElementById("result-panel");
-    const resultTitle = document.getElementById("result-title");
+
     const suggestionsStatus = document.getElementById("suggestions-status");
     const copySuggestion = document.getElementById("copy-suggestion");
 
-    resultTitle.textContent = "Suggestions";
-    suggestionsStatus.textContent = "";
+    // Display the suggestions
+    suggestionsStatus.innerHTML = markdownToHtml(suggestions);
+
+    // Show copy button
     copySuggestion.classList.remove("hidden");
+
+    // Save suggestions for the next time the popup opens
+    chrome.storage.local.set({ savedSuggestions: suggestions }, () => {
+      console.log("Suggestions saved to local storage");
+    });
   }
 });
